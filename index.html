@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz</title>
+
+    <script>
+        const questions = [ 
+            "What company developed Java?",
+            "What year was Java released?",
+            "What symbol is used to end a statement in Java?",
+            "How do you declare a variable in Java?",
+            "How do you create a class in java?",
+            "What will be output of  x in following code? class Test{ public static void main(String[] args) { int x = 1; if (x == 1) { x += 1;} } }",
+            "What is the default value of a boolean variable in Java?",
+            "Which of the following is not a primitive data type in Java?",
+            "Which keyword is used to inherit a class in Java?",
+            "Which method is the entry point of a Java program?",
+        ]
+        const incorrectAnswers = [
+            "Oracle",
+            "1997",
+            ":",
+            "var x;",
+            "function MyClass {}",
+            "1",
+            "true",
+            "int",
+            "inherits",
+            "start()",
+    ]
+        const correctAnswers = [
+            "Sun Microsystems",
+            "1996",
+            ";",
+            "dataType variableName;",
+            "public class MyClass {}",
+            "2",
+            "false",
+            "String",
+            "extends",
+            "public static void main(String[] args)",
+        ]
+        let score = 0;
+        let currentQuestion = 1;
+        let shownQuestions = [];
+
+
+
+        // Displays the questions one by one in a random order//
+
+        function LoadQuiz(){
+            
+            
+
+            if(shownQuestions.length <= questions.length -1){
+
+                let randomIndex = Math.floor(Math.random() * questions.length);
+                while (shownQuestions.includes(randomIndex)) {
+                    randomIndex = Math.floor(Math.random() * questions.length);
+                }
+
+                document.getElementById("quiz-container").innerHTML = "Question " + currentQuestion + ": " + questions[randomIndex] + "<br>"
+                LoadAnswers(randomIndex);
+                shownQuestions.push(randomIndex);
+
+            }   
+            else{
+                finishQuiz();
+            }
+        }
+
+        //Checks if the selected answer is correct and updates the current test score accordingly//
+
+        function checkAnswer(selectedAnswer, index){
+
+            if (selectedAnswer === correctAnswers[index]){
+                score++;
+                document.getElementById("quiz-container").innerHTML = "Correct!";
+            }
+            else{
+                document.getElementById("quiz-container").innerHTML = "Incorrect!";
+            }
+
+            currentQuestion++;
+            setTimeout(LoadQuiz, 1000);
+    
+            }
+        
+            // Fisher-Yates Shuffle Algorithm to make sure the answer order is random in each question//
+
+        function shuffleArray(array) {
+            for (let i = array.length -1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i+1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        //Loads the answers for the current question//
+
+        function LoadAnswers(index){
+            let answers = [correctAnswers[index], incorrectAnswers[index]]
+            answers = shuffleArray(answers);
+            for (let i = 0; i < answers.length; i++) {
+                document.getElementById("quiz-container").innerHTML += "<button onclick ='checkAnswer(\"" + answers[i] + "\", " + index + ")'>" + answers[i] + "</button><br>";
+            }
+
+        }
+
+        //Displays the final score and a restart button//
+
+        function finishQuiz(){
+            document.getElementById("quiz-container").innerHTML = "Quiz Finished! Your score is: " + score + "/" + questions.length + "<br>";
+            document.getElementById("quiz-container").innerHTML += "<button onclick='resetQuiz()'>Restart Quiz</button>";
+        }
+
+        //Resets the quiz variables and restarts the quiz//
+
+        function resetQuiz(){
+            score = 0;
+            currentQuestion = 1;
+            shownQuestions = [];
+            LoadQuiz();
+        }
+
+        //Main function to start the quiz//
+        
+        function Main(){
+            LoadQuiz();
+        }
+
+        
+
+
+
+
+        
+    </script>
+</head>
+<body>
+
+    <h1> Raspberry Pi Java Quiz </h1>
+    <div id="quiz-container">
+
+    </div>
+
+    <script>
+        Main();
+    </script>
+
+    
+</body>
+</html>
